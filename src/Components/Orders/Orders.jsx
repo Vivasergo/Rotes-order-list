@@ -4,10 +4,12 @@ import Style from './style.module.css'
 import moment from "moment";
 import {Button} from 'antd';
 import {OrderModal} from "../Modal/OrderModal";
+import _ from 'lodash'
 
 const Orders = ({setError, setIsLoading}) => {
 
     const [orders, setOrders] = useState([])
+    const [orderForModal, setOrderForModal] = useState({})
     const [route, setRoute] = useState({})
     const [startPointData, setStartPointData] = useState({});
     const [finalPointData, setFinalPointData] = useState({});
@@ -29,9 +31,14 @@ const Orders = ({setError, setIsLoading}) => {
 
 
     const showModal = async (order) => {
-        setIsLoading(true)
-        await handleRoute(order.source, order.destination)
-        setIsLoading(false)
+
+        if(!_.isEqual(order, orderForModal)){
+            setIsLoading(true)
+            setOrderForModal(prevState => ({...prevState, ...order}))
+            await handleRoute(order.source, order.destination)
+            setIsLoading(false)
+        }
+
         setIsModalVisible(true);
     };
 
@@ -51,6 +58,7 @@ const Orders = ({setError, setIsLoading}) => {
         setStartPointData(prevState => ({...prevState, ...responseStartPointData.data}))
         setFinalPointData(prevState => ({...prevState, ...responseFinalPointData.data}))
         setRoute(prevState => ({...prevState, ...responseRoute.data}))
+
     }
 
     return <div>
@@ -59,7 +67,7 @@ const Orders = ({setError, setIsLoading}) => {
             <div className='orders-list'>
                 {isModalVisible && <OrderModal routeData={route} isModalVisible={isModalVisible} handleOk={handleOk}
                                                handleCancel={handleCancel} startPointData={startPointData}
-                                               finalPointData={finalPointData}/>}
+                                               finalPointData={finalPointData} orderData={orderForModal}/>}
                 {orders.map((order) => {
                     return <section key={order.id} className={Style.orderItem}>
                         <div>{order.order_number} <span>{order.subject}</span>

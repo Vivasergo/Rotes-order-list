@@ -1,9 +1,13 @@
-.map-block{
-    height: 100%;
+.mapBlock{
+    height: 65%;
     width: auto;
 }
-
-.modal-block{
-    height: 50%;
-    width: 50%;
+.modalContainer{
+    width: 60% !important;
+    top:10px;
+}
+.routeTableData{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
 }

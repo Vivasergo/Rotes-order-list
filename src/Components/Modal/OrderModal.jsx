@@ -3,21 +3,18 @@ import {Modal, Button} from 'antd';
 import style from './Style.module.css'
 import endPinSrc from './Images/Location-512.png'
 import L from 'leaflet'
+import {DestinationPointTable} from "../RoutePointsTable/DestinationPointTable";
+import moment from "moment";
+import {StartPointTable} from "../RoutePointsTable/StartPointTable";
 
 
-export const OrderModal = ({isModalVisible, handleOk, handleCancel, routeData, startPointData, finalPointData}) => {
+export const OrderModal = ({isModalVisible, handleOk, handleCancel, routeData, startPointData, finalPointData, orderData}) => {
 
-
-
-    // const mapRef = useRef(null);
-
-    console.log('startPointData', startPointData);
-    console.log('finalPointData', finalPointData);
     const [[startLon, startLat], [endLon, endLat]] = routeData.metadata.query.coordinates
 
-    useEffect(()=>{
+    useEffect(() => {
 
-    },[])
+    }, [])
 
     useEffect(() => {
         // if (!mapRef.current) return
@@ -38,8 +35,8 @@ export const OrderModal = ({isModalVisible, handleOk, handleCancel, routeData, s
             iconAnchor: [12, 40],
         });
 
-        L.marker([startLat, startLon], {title: "Start point"}).addTo(myMap);
-        L.marker([endLat, endLon], {icon: endPinIcon, title: "Final destination"}).addTo(myMap);
+        L.marker([startLat, startLon], {title: `Start point: ${startPointData.display_name}`}).addTo(myMap);
+        L.marker([endLat, endLon], {icon: endPinIcon, title: `Final destination: ${finalPointData.display_name}`}).addTo(myMap);
 
         const featureLayer = L.geoJson(routeData, {});
 
@@ -48,9 +45,20 @@ export const OrderModal = ({isModalVisible, handleOk, handleCancel, routeData, s
 
     return (
         <>
-            <Modal bodyStyle={{height: '300px'}} title="Basic Modal" visible={isModalVisible} onOk={handleOk}
-                   onCancel={handleCancel}>
-                <div style={{height: '100%'}} id='map'></div>
+            <Modal bodyStyle={{height: '80vh', overflowX: 'auto'}}
+                   title={`Route map. 
+                        Order number: ${orderData.order_number}, 
+                        Name: ${orderData.subject},
+                        Destination time: ${moment(orderData.destination.time).format("HH:mm DD.MM.YYYY")}`}
+                   visible={isModalVisible}
+                   onOk={handleOk}
+                   onCancel={handleCancel} className={style.modalContainer}
+            >
+                <div className={style.mapBlock} id='map'></div>
+                <div className={style.routeTableData}>
+                    <StartPointTable pointData={startPointData}/>
+                    <DestinationPointTable pointData={finalPointData}/>
+                </div>
             </Modal>
         </>
     );
