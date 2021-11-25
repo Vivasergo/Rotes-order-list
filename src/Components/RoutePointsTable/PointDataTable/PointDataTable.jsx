@@ -1,13 +1,12 @@
 import React from 'react'
-import {Table, Tag, Space} from 'antd';
+import { Table } from 'antd'
 import style from '../Style.module.css'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
-export const PointDataTable = ({pointData}) => {
-
+export const PointDataTable = ({ pointData }) => {
     const ADDRESS_TYPES = {
-        building: 'Budynek',
-        house_number: 'Numer budybku',
+        building: 'Zakład',
+        house_number: 'Nr budynku',
         road: 'Ulica',
         suburb: 'Okolica',
         city_district: 'Dzielnica miasta',
@@ -25,13 +24,13 @@ export const PointDataTable = ({pointData}) => {
         municipality: 'Gmina',
     }
 
-    const data =[]
+    const data = []
 
-    for(let [addrType, addrValue] of Object.entries(pointData.address)){
+    for (let [addrType, addrValue] of Object.entries(pointData.address)) {
         data.push({
             key: uuidv4(),
             addressType: ADDRESS_TYPES[addrType] || addrType,
-            addressValue: addrValue.toUpperCase()
+            addressValue: addrValue.toUpperCase(),
         })
     }
 
@@ -47,8 +46,7 @@ export const PointDataTable = ({pointData}) => {
             dataIndex: 'addressValue',
             key: 'addressValue',
         },
+    ]
 
-    ];
-
-    return <Table pagination={false} columns={columns} dataSource={data}/>
+    return <Table pagination={false} columns={columns} dataSource={data} />
 }
